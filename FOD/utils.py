@@ -26,8 +26,8 @@ def get_splitted_dataset(config, split, dataset_name, path_images, path_depths, 
         selected_files = list_files[int(len(list_files)*config['Dataset']['splits']['split_train'])+int(len(list_files)*config['Dataset']['splits']['split_val']):]
 
     path_images = [os.path.join(config['Dataset']['paths']['path_dataset'], dataset_name, config['Dataset']['paths']['path_images'], im[:-4]+config['Dataset']['extensions']['ext_images']) for im in selected_files]
-    path_depths = [os.path.join(config['Dataset']['paths']['path_dataset'], dataset_name, config['Dataset']['paths']['path_depths'], im[:-4]+config['Dataset']['extensions']['ext_depths']) for im in selected_files]
-    path_segmentation = [os.path.join(config['Dataset']['paths']['path_dataset'], dataset_name, config['Dataset']['paths']['path_segmentations'], im[:-4]+config['Dataset']['extensions']['ext_segmentations']) for im in selected_files]
+    path_depths = [os.path.join(config['Dataset']['paths']['path_dataset'], dataset_name, config['Dataset']['paths']['path_depths'], im[:-4].replace('rgb', 'depth')+config['Dataset']['extensions']['ext_depths']) for im in selected_files]
+    path_segmentation = [os.path.join(config['Dataset']['paths']['path_dataset'], dataset_name, config['Dataset']['paths']['path_segmentations'], im[:-4].replace('rgb', 'mask')+config['Dataset']['extensions']['ext_segmentations']) for im in selected_files]
     return path_images, path_depths, path_segmentation
 
 def get_transforms(config):
@@ -95,3 +95,30 @@ def get_optimizer(config, net):
 
 def get_schedulers(optimizers):
     return [ReduceLROnPlateau(optimizer) for optimizer in optimizers]
+
+
+def get_normal(depth_map):
+    """calculate normal map from depth map
+
+    Args:
+        depth_map (ndarray): depth map
+
+    Returns:
+        ndarray: normal map
+    """
+    d_im = depth_map.astype(np.float32)
+    zy, zx = np.gradient(d_im)  
+   
+    normal = np.dstack((-zx, -zy, np.ones_like(d_im)))
+    n = np.linalg.norm(normal, axis=2)
+    normal[:, :, 0] /= n
+    normal[:, :, 1] /= n
+    normal[:, :, 2] /= n
+
+    # offset and rescale values to be in 0-255
+    normal += 1
+    normal /= 2
+    # if show, comment
+    normal *= 255
+    # cv2.imwrite("normal.png", normal[:, :, ::-1])
+    return normal[:,:,::-1]

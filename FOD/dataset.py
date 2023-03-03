@@ -60,6 +60,7 @@ class AutoFocusDataset(Dataset):
         self.p_flip = config['Dataset']['transforms']['p_flip'] if split=='train' else 0
         self.p_crop = config['Dataset']['transforms']['p_crop'] if split=='train' else 0
         self.p_rot = config['Dataset']['transforms']['p_rot'] if split=='train' else 0
+        self.p_sample = config['Dataset']['transforms']['p_sample'] if split=='train' else 0
         self.resize = config['Dataset']['transforms']['resize']
 
     def __len__(self):
@@ -116,6 +117,10 @@ class AutoFocusDataset(Dataset):
             image = transforms.Resize((self.resize, self.resize))(image)
             depth = transforms.Resize((self.resize, self.resize))(depth)
             segmentation = transforms.Resize((self.resize, self.resize), interpolation=transforms.InterpolationMode.NEAREST)(segmentation)
+        
+        if random.random() < self.p_sample:
+            image = transforms.Resize((self.resize // 5, self.resize // 5), interpolation=transforms.InterpolationMode.NEAREST)(image)
+            image = transforms.Resize((self.resize, self.resize), interpolation=transforms.InterpolationMode.NEAREST)(image)
         # show([imgorig, image, depth, segmentation])
         # exit(0)
         return image, depth, segmentation

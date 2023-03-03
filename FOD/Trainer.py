@@ -89,6 +89,13 @@ class Trainer(object):
 
                 if self.config['wandb']['enable'] and ((i % 50 == 0 and i>0) or i==len(train_dataloader)-1):
                     wandb.log({"loss": running_loss/(i+1)})
+                    self.img_logger(
+                        X[0].unsqueeze(0), 
+                        Y_depths[0].unsqueeze(0), 
+                        Y_segmentations[0].unsqueeze(0), 
+                        output_depths[0].unsqueeze(0), 
+                        output_segmentations[0].unsqueeze(0)
+                    )
                 pbar.set_postfix({'training_loss': running_loss/(i+1)})
 
             new_val_loss = self.run_eval(val_dataloader)

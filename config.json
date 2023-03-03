@@ -14,24 +14,25 @@
         "loss_segmentation":"ce",
         "momentum":0.9,
         "epochs":20,
-        "batch_size":1,
+        "batch_size": 8,
         "path_model":"models",
-        "path_predicted_images":"output",
+        "path_predicted_images":"/home/dw/data/vgg/trans_depth_normal/1",
+        "path_input_images":"/home/dw/data/vgg/face/1/",
         "seed":0,
         "patch_size":16
     },
     "Dataset":{
         "paths":{
-            "path_dataset":"./datasets",
-            "list_datasets":["inria", "nyuv2", "posetrack"],
-            "path_images":"images",
-            "path_segmentations":"segmentations",
-            "path_depths":"depths"
+            "path_dataset":"/home/dw/data/bu3dfe/augment/",
+            "list_datasets":["."],
+            "path_images":"rgb/train",
+            "path_segmentations":"mask/train",
+            "path_depths":"depth/train"
         },
         "extensions":{
-            "ext_images":".jpg",
+            "ext_images":".png",
             "ext_segmentations":".png",
-            "ext_depths":".jpg"
+            "ext_depths":".png"
         },
         "splits":{
             "split_train":0.6,
@@ -42,21 +43,22 @@
             "resize":384,
             "p_flip":0.5,
             "p_crop":0.3,
-            "p_rot":0.2
+            "p_rot":0.2,
+            "p_sample": 0.6
         },
         "classes":{
             "1": {
-                "name": "person",
-                "color": [150,5,61]
+                "name": "face",
+                "color": [255, 255, 255]
             }
         }
     },
     "wandb":{
-        "enable":false,
-        "username":"younesbelkada",
+        "enable": true,
+        "username":"dw-dengwei",
         "images_to_show":3,
-        "im_h":540,
-        "im_w":980
+        "im_h":512,
+        "im_w":512
     }
 
 }
