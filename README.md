@@ -1,5 +1,6 @@
 # About
 This repository is a fine-tuned version of FocusOnDepth (FOD) model in [here](https://github.com/antocad/FocusOnDepth).
+It can estimate the depth of a RGB facial image.
 
 The training data is an augmented version of BU3DFE dataset.
 We render the RGB and depth images at 7 views per 3D face model.
