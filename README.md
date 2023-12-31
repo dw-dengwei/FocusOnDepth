@@ -9,5 +9,5 @@ Users should fill the background with black.
 The output image has 4 channels: depth, x, y, z, where (x, y, z) are components of normal vector.
 
 # TODOs
-[] Release the checkpoint
-[] Delete the unused codes
+- [ ] Release the checkpoint
+- [ ] Delete the unused codes
